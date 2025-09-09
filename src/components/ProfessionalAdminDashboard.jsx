@@ -15,6 +15,13 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   });
   const [loading, setLoading] = useState(true);
   
+  // Revenue analysis state
+  const [showRevenueModal, setShowRevenueModal] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [revenueLoading, setRevenueLoading] = useState(false);
+  
   // Product form state
   const [productForm, setProductForm] = useState({
     name: '',
@@ -120,6 +127,49 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   function showNotification(message, type = 'success') {
     setNotification({ show: true, message, type });
     setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000);
+  }
+
+  async function fetchMonthlyRevenue(year = selectedYear) {
+    setRevenueLoading(true);
+    try {
+      const response = await fetch(`http://localhost:3001/api/admin/revenue/monthly?year=${year}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setMonthlyRevenue(data.monthlyRevenue || []);
+      } else {
+        showNotification('Failed to fetch monthly revenue', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching monthly revenue:', error);
+      showNotification('Error fetching monthly revenue', 'error');
+    } finally {
+      setRevenueLoading(false);
+    }
+  }
+
+  function handleRevenueCardClick() {
+    setShowRevenueModal(true);
+    fetchMonthlyRevenue();
+  }
+
+  function handleMonthChange(month) {
+    setSelectedMonth(month);
+  }
+
+  function handleYearChange(year) {
+    setSelectedYear(year);
+    fetchMonthlyRevenue(year);
+  }
+
+  function getMonthName(monthNum) {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[monthNum - 1];
   }
 
   async function handleAddProduct(e) {
@@ -384,11 +434,12 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
               <p className="stat-number">{stats.totalProducts}</p>
             </div>
           </div>
-          <div className="stat-card revenue">
+          <div className="stat-card revenue clickable" onClick={handleRevenueCardClick}>
             <div className="stat-icon">💰</div>
             <div className="stat-info">
               <h3>Total Revenue</h3>
               <p className="stat-number">₹{stats.totalRevenue.toLocaleString()}</p>
+              <small className="click-hint">Click to view monthly breakdown</small>
             </div>
           </div>
           <div className="stat-card warning">
@@ -506,6 +557,86 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
             </table>
           </div>
         </div>
+
+        {/* Revenue Modal */}
+        {showRevenueModal && (
+          <div className="modal-overlay" onClick={() => setShowRevenueModal(false)}>
+            <div className="revenue-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Monthly Revenue Analysis</h2>
+                <button 
+                  className="close-btn" 
+                  onClick={() => setShowRevenueModal(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="modal-content">
+                <div className="revenue-controls">
+                  <div className="year-selector">
+                    <label>Year:</label>
+                    <select 
+                      value={selectedYear} 
+                      onChange={(e) => handleYearChange(Number(e.target.value))}
+                    >
+                      {[2023, 2024, 2025, 2026].map(year => (
+                        <option key={year} value={year}>{year}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className="month-selector">
+                    <label>Month:</label>
+                    <select 
+                      value={selectedMonth} 
+                      onChange={(e) => handleMonthChange(Number(e.target.value))}
+                    >
+                      {Array.from({length: 12}, (_, i) => i + 1).map(month => (
+                        <option key={month} value={month}>
+                          {getMonthName(month)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {revenueLoading ? (
+                  <div className="loading-container">
+                    <div className="loading-spinner"></div>
+                    <p>Loading revenue data...</p>
+                  </div>
+                ) : (
+                  <div className="revenue-content">
+                    <div className="revenue-summary">
+                      <h3>Revenue for {getMonthName(selectedMonth)} {selectedYear}</h3>
+                      <div className="selected-month-revenue">
+                        ₹{(monthlyRevenue.find(m => m.month === selectedMonth)?.revenue || 0).toLocaleString()}
+                      </div>
+                    </div>
+
+                    <div className="monthly-breakdown">
+                      <h4>Year Overview</h4>
+                      <div className="revenue-grid">
+                        {monthlyRevenue.map((data, index) => (
+                          <div 
+                            key={index} 
+                            className={`month-card ${data.month === selectedMonth ? 'selected' : ''}`}
+                            onClick={() => handleMonthChange(data.month)}
+                          >
+                            <div className="month-name">{getMonthName(data.month)}</div>
+                            <div className="month-revenue">₹{data.revenue.toLocaleString()}</div>
+                            <div className="month-orders">{data.orders} orders</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

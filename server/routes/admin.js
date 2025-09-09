@@ -387,6 +387,67 @@ router.get('/stats', async (req, res) => {
   }
 });
 
+// Get monthly revenue data
+router.get('/revenue/monthly', async (req, res) => {
+  try {
+    const { year } = req.query;
+    const targetYear = year ? parseInt(year) : new Date().getFullYear();
+    
+    // Create date range for the year
+    const startDate = new Date(targetYear, 0, 1); // January 1st
+    const endDate = new Date(targetYear + 1, 0, 1); // January 1st of next year
+    
+    console.log(`Fetching revenue data for year: ${targetYear}`);
+    console.log(`Date range: ${startDate} to ${endDate}`);
+    
+    // Aggregate monthly revenue
+    const monthlyData = await Order.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lt: endDate
+          },
+          status: { $nin: ['cancelled'] } // Exclude cancelled orders
+        }
+      },
+      {
+        $group: {
+          _id: { $month: '$createdAt' },
+          revenue: { $sum: '$totalAmount' },
+          orders: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id': 1 }
+      }
+    ]);
+    
+    console.log('Raw monthly data:', monthlyData);
+    
+    // Fill in missing months with zero revenue
+    const monthlyRevenue = [];
+    for (let month = 1; month <= 12; month++) {
+      const existingData = monthlyData.find(data => data._id === month);
+      monthlyRevenue.push({
+        month: month,
+        revenue: existingData ? existingData.revenue : 0,
+        orders: existingData ? existingData.orders : 0
+      });
+    }
+    
+    console.log('Processed monthly revenue:', monthlyRevenue);
+    
+    res.json({
+      year: targetYear,
+      monthlyRevenue
+    });
+  } catch (error) {
+    console.error('Error fetching monthly revenue:', error);
+    res.status(500).json({ error: 'Failed to fetch monthly revenue data' });
+  }
+});
+
 // Category Management Endpoints
 
 // Get all categories

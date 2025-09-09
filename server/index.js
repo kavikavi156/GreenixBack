@@ -35,6 +35,7 @@ try {
   app.use('/api/customer', require('./routes/customer'));
   app.use('/api/admin', require('./routes/admin'));
   app.use('/api/upload', require('./routes/upload'));
+  app.use('/api/razorpay', require('./routes/razorpay')); // Add Razorpay routes
   
   // Categories route (accessible to both admin and customer)
   app.get('/api/categories', async (req, res) => {
