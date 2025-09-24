@@ -843,4 +843,226 @@ router.get('/products/:id/price/:quantity', async (req, res) => {
   }
 });
 
+// PDF Report Generation
+const PDFDocument = require('pdfkit');
+
+// Admin List endpoint
+router.get('/admin-list', async (req, res) => {
+  try {
+    // For now, return empty array since we don't have admin management in database yet
+    res.json([]);
+  } catch (error) {
+    console.error('Error fetching admin list:', error);
+    res.status(500).json({ error: 'Failed to fetch admin list' });
+  }
+});
+
+// Sales Report endpoint
+router.get('/sales-report', async (req, res) => {
+  try {
+    const { period, year, month } = req.query;
+    
+    let startDate, endDate;
+    
+    if (period === 'monthly' && month) {
+      startDate = new Date(year, month - 1, 1);
+      endDate = new Date(year, month, 0);
+    } else {
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year, 11, 31);
+    }
+    
+    const orders = await Order.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+      status: { $in: ['shipped', 'delivered', 'completed'] }
+    });
+    
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const totalOrders = orders.length;
+    
+    res.json({
+      totalRevenue,
+      totalOrders,
+      period,
+      year: parseInt(year),
+      month: month ? parseInt(month) : null
+    });
+  } catch (error) {
+    console.error('Error generating sales report:', error);
+    res.status(500).json({ error: 'Failed to generate sales report' });
+  }
+});
+
+// Download Report endpoint
+router.get('/download-report', async (req, res) => {
+  try {
+    const { period, year, month, format } = req.query;
+    
+    let startDate, endDate;
+    let reportTitle;
+    
+    if (period === 'monthly' && month) {
+      startDate = new Date(year, month - 1, 1);
+      endDate = new Date(year, month, 0);
+      const monthName = startDate.toLocaleString('default', { month: 'long' });
+      reportTitle = `${monthName} ${year} Sales Report`;
+    } else {
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year, 11, 31);
+      reportTitle = `${year} Annual Sales Report`;
+    }
+    
+    // Fetch orders
+    const orders = await Order.find({
+      createdAt: { $gte: startDate, $lte: endDate }
+    }).populate('userId', 'name email phone').sort({ createdAt: -1 });
+    
+    // Calculate totals
+    const completedOrders = orders.filter(order => 
+      ['shipped', 'delivered', 'completed'].includes(order.status)
+    );
+    
+    const totalRevenue = completedOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const totalOrders = completedOrders.length;
+    const pendingOrders = orders.filter(order => order.status === 'pending').length;
+    
+    // Create PDF
+    const doc = new PDFDocument({ margin: 50 });
+    
+    // Set response headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${reportTitle.replace(/\s+/g, '_')}.pdf"`);
+    
+    doc.pipe(res);
+    
+    // Header
+    doc.fillColor('#667eea')
+       .fontSize(24)
+       .text('🌱 PAVITHRA TRADERS', 50, 50);
+    
+    doc.fillColor('#6b7280')
+       .fontSize(12)
+       .text('Agricultural Excellence & Innovation', 50, 80);
+    
+    // Title
+    doc.fillColor('#1f2937')
+       .fontSize(18)
+       .text(reportTitle, 50, 120);
+    
+    // Report period
+    doc.fillColor('#6b7280')
+       .fontSize(12)
+       .text(`Generated on: ${new Date().toLocaleDateString()}`, 50, 145);
+    
+    // Summary Section
+    doc.fillColor('#059669')
+       .fontSize(16)
+       .text('📊 EXECUTIVE SUMMARY', 50, 180);
+    
+    const summaryY = 210;
+    
+    // Summary boxes
+    doc.rect(50, summaryY, 150, 80)
+       .fillAndStroke('#f0fdf4', '#bbf7d0');
+    
+    doc.fillColor('#047857')
+       .fontSize(12)
+       .text('TOTAL REVENUE', 60, summaryY + 15);
+    doc.fontSize(18)
+       .text(`₹${totalRevenue.toLocaleString('en-IN')}`, 60, summaryY + 35);
+    
+    doc.rect(220, summaryY, 150, 80)
+       .fillAndStroke('#dbeafe', '#93c5fd');
+    
+    doc.fillColor('#1e40af')
+       .fontSize(12)
+       .text('COMPLETED ORDERS', 230, summaryY + 15);
+    doc.fontSize(18)
+       .text(totalOrders.toString(), 230, summaryY + 35);
+    
+    doc.rect(390, summaryY, 150, 80)
+       .fillAndStroke('#fef3c7', '#fcd34d');
+    
+    doc.fillColor('#92400e')
+       .fontSize(12)
+       .text('PENDING ORDERS', 400, summaryY + 15);
+    doc.fontSize(18)
+       .text(pendingOrders.toString(), 400, summaryY + 35);
+    
+    // Orders Details
+    let currentY = summaryY + 120;
+    
+    doc.fillColor('#dc2626')
+       .fontSize(16)
+       .text('📋 ORDER DETAILS', 50, currentY);
+    
+    currentY += 40;
+    
+    // Table headers
+    doc.fillColor('#374151')
+       .fontSize(10)
+       .text('Order ID', 50, currentY)
+       .text('Customer', 120, currentY)
+       .text('Products', 200, currentY)
+       .text('Amount', 300, currentY)
+       .text('Status', 380, currentY)
+       .text('Date', 450, currentY);
+    
+    currentY += 20;
+    
+    // Draw header line
+    doc.moveTo(50, currentY)
+       .lineTo(550, currentY)
+       .stroke('#e5e7eb');
+    
+    currentY += 10;
+    
+    // Order rows
+    const ordersToShow = orders.slice(0, 20); // Limit to 20 orders for PDF
+    
+    ordersToShow.forEach((order, index) => {
+      if (currentY > 700) { // New page if needed
+        doc.addPage();
+        currentY = 50;
+      }
+      
+      const bgColor = index % 2 === 0 ? '#f9fafb' : '#ffffff';
+      
+      doc.rect(50, currentY - 5, 500, 25)
+         .fill(bgColor);
+      
+      doc.fillColor('#374151')
+         .fontSize(9)
+         .text(order.orderId || `#${order._id.toString().slice(-6)}`, 50, currentY)
+         .text(order.userId?.name || 'N/A', 120, currentY)
+         .text(`${order.items?.length || 0} items`, 200, currentY)
+         .text(`₹${(order.totalAmount || 0).toLocaleString('en-IN')}`, 300, currentY);
+      
+      // Status with color
+      const statusColor = order.status === 'completed' || order.status === 'shipped' 
+        ? '#059669' : order.status === 'pending' ? '#dc2626' : '#6b7280';
+      
+      doc.fillColor(statusColor)
+         .text(order.status?.toUpperCase() || 'UNKNOWN', 380, currentY);
+      
+      doc.fillColor('#6b7280')
+         .text(new Date(order.createdAt).toLocaleDateString(), 450, currentY);
+      
+      currentY += 25;
+    });
+    
+    // Footer
+    doc.fontSize(8)
+       .fillColor('#9ca3af')
+       .text('This is an automatically generated report from Pavithra Traders Admin System.', 50, doc.page.height - 50)
+       .text(`Report contains ${ordersToShow.length} of ${orders.length} total orders for the specified period.`, 50, doc.page.height - 35);
+    
+    doc.end();
+    
+  } catch (error) {
+    console.error('Error generating PDF report:', error);
+    res.status(500).json({ error: 'Failed to generate PDF report' });
+  }
+});
+
 module.exports = router;
