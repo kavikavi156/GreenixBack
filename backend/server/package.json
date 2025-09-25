@@ -1,0 +1,31 @@
+{
+  "name": "pavithratraders-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "babel-node index.js",
+    "dev": "babel-node index.js",
+    "build": "babel . --out-dir dist --ignore node_modules"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "csv-writer": "^1.6.0",
+    "excel4node": "^1.8.2",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.0",
+    "multer": "^2.0.2",
+    "pdfkit": "^0.17.2",
+    "razorpay": "^2.9.6",
+    "react-router-dom": "^7.8.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/node": "^7.28.0",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1"
+  }
+}
