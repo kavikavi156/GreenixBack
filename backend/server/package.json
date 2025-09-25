@@ -4,18 +4,19 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "babel-node index.js",
-    "dev": "babel-node index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "build": "babel . --out-dir dist --ignore node_modules"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "csv-writer": "^1.6.0",
+    "dotenv": "^17.2.2",
     "excel4node": "^1.8.2",
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.5.0",
+    "mongoose": "^7.8.7",
     "multer": "^2.0.2",
     "pdfkit": "^0.17.2",
     "razorpay": "^2.9.6",
