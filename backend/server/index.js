@@ -63,6 +63,93 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+// Health endpoints
+app.get('/api/health', async (req, res) => {
+  try {
+    const Product = require('./models/Product');
+    const productCount = await Product.countDocuments();
+    
+    res.json({ 
+      status: 'OK', 
+      timestamp: new Date().toISOString(),
+      mongodb: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+      environment: NODE_ENV,
+      productCount: productCount,
+      dbName: mongoose.connection.db?.databaseName || 'unknown'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'ERROR', 
+      error: error.message,
+      mongodb: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    });
+  }
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', service: 'Greenix Backend' });
+});
+
+// Debug endpoint for products
+app.get('/api/debug/products', async (req, res) => {
+  try {
+    const Product = require('./models/Product');
+    const products = await Product.find().limit(5);
+    
+    // If no products exist, create sample products
+    if (products.length === 0) {
+      const sampleProducts = [
+        {
+          name: 'Organic Tomatoes',
+          description: 'Fresh organic tomatoes from local farms',
+          price: 50,
+          category: 'Vegetables',
+          stock: 100,
+          image: '/uploads/sample-tomato.jpg',
+          tags: ['organic', 'fresh', 'local']
+        },
+        {
+          name: 'Fresh Apples',
+          description: 'Crispy red apples, perfect for snacking',
+          price: 120,
+          category: 'Fruits',
+          stock: 80,
+          image: '/uploads/sample-apple.jpg',
+          tags: ['fresh', 'sweet', 'healthy']
+        }
+      ];
+      
+      await Product.insertMany(sampleProducts);
+      const newProducts = await Product.find().limit(5);
+      
+      res.json({ 
+        status: 'OK', 
+        message: 'Created sample products',
+        count: newProducts.length,
+        products: newProducts.map(p => ({
+          id: p._id,
+          name: p.name,
+          price: p.price,
+          category: p.category
+        }))
+      });
+    } else {
+      res.json({ 
+        status: 'OK', 
+        count: products.length,
+        products: products.map(p => ({
+          id: p._id,
+          name: p.name,
+          price: p.price,
+          category: p.category
+        }))
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message, stack: error.stack });
+  }
+});
+
 // Routes
 try {
   app.use('/api/auth', require('./routes/auth'));
@@ -71,6 +158,7 @@ try {
   app.use('/api/admin', require('./routes/admin'));
   app.use('/api/upload', require('./routes/upload'));
   app.use('/api/razorpay', require('./routes/razorpay')); // Add Razorpay routes
+  app.use('/razorpay', require('./routes/razorpay')); // Also mount at /razorpay for frontend compatibility
   
   // Categories route (accessible to both admin and customer)
   app.get('/api/categories', async (req, res) => {
@@ -122,6 +210,36 @@ app.get('/api/test', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+// Health endpoint
+app.get('/api/health', async (req, res) => {
+  try {
+    // Check database connection
+    const dbState = mongoose.connection.readyState;
+    const dbStatus = dbState === 1 ? 'connected' : dbState === 2 ? 'connecting' : 'disconnected';
+    
+    // Try to count products
+    let productCount = 0;
+    try {
+      const Product = require('./models/Product.js');
+      productCount = await Product.countDocuments();
+    } catch (err) {
+      console.error('Error counting products:', err);
+    }
+    
+    res.json({
+      status: 'OK',
+      database: dbStatus,
+      productCount: productCount,
+      environment: NODE_ENV,
+      cors: ALLOWED_ORIGINS,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Health check error:', error);
+    res.status(500).json({ error: 'Health check failed', details: error.message });
+  }
 });
 
 app.listen(PORT, () => {

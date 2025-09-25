@@ -6,6 +6,8 @@ const router = express.Router();
 // Get all products with sorting and filtering
 router.get('/', async (req, res) => {
   try {
+    console.log('Products API called with query:', req.query);
+    
     const { 
       sort = 'name', 
       order = 'asc', 
@@ -69,6 +71,8 @@ router.get('/', async (req, res) => {
     
     const total = await Product.countDocuments(filter);
     
+    console.log(`Found ${products.length} products out of ${total} total`);
+    
     res.json({
       products,
       pagination: {
@@ -80,7 +84,15 @@ router.get('/', async (req, res) => {
     });
   } catch (error) {
     console.error('Products fetch error:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    console.error('Error stack:', error.stack);
+    console.error('MongoDB connection state:', require('mongoose').connection.readyState);
+    
+    res.status(500).json({ 
+      error: 'Failed to fetch products',
+      details: error.message,
+      mongoState: require('mongoose').connection.readyState,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
