@@ -2,9 +2,11 @@
 // This file centralizes all API endpoints and configuration
 
 // Base URLs for different environments
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://greenix-3.onrender.com' 
-  : 'https://greenix-3.onrender.com'; // Using Render URL for both dev and production
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://greenix-3.onrender.com';
+
+console.log('API Base URL:', API_BASE_URL);
+console.log('Environment:', import.meta.env.MODE);
+console.log('All env vars:', import.meta.env);
 
 // API Endpoints
 export const API_ENDPOINTS = {
