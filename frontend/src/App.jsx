@@ -6,7 +6,6 @@ import ProductShowcase from './components/ProductShowcase.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import EnhancedHomePageNew from './components/EnhancedHomePageNew.jsx';
 import Checkout from './components/Checkout.jsx';
-import APIDebug from './components/APIDebug.jsx';
 
 function AdminLogin() {
   return <EnhancedAdminPageNew />;
@@ -38,7 +37,6 @@ function CheckoutWrapper() {
 function App() {
   return (
     <>
-      <APIDebug />
       <Routes>
         <Route path="/" element={<EnhancedHomePageNew />} />
         <Route path="/login" element={<LoginPage />} />
