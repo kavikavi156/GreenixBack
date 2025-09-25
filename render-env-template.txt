@@ -1,0 +1,39 @@
+# 🔐 Environment Variables for Render.com
+# Copy these key-value pairs into your Render.com Environment Variables section
+
+# Core Configuration
+NODE_ENV=production
+PORT=10000
+
+# Database (Replace with your MongoDB Atlas connection string)
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/greenix?retryWrites=true&w=majority
+
+# Security (Generate a strong random string)
+JWT_SECRET=generate_a_random_32_character_string_here
+
+# Payment Gateway (Get from Razorpay dashboard)
+RAZORPAY_KEY_ID=rzp_live_your_key_id_here
+RAZORPAY_KEY_SECRET=your_razorpay_secret_key_here
+
+# Admin Account
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=YourSecurePassword123!
+
+# CORS (Replace with your frontend URL)
+ALLOWED_ORIGINS=https://your-frontend-domain.com
+
+# Optional Settings
+MAX_FILE_SIZE=5242880
+BCRYPT_ROUNDS=12
+DEBUG=false
+ENABLE_LOGGING=true
+
+# ===========================================
+# 📋 INSTRUCTIONS:
+# ===========================================
+# 1. Replace ALL placeholder values above
+# 2. Copy each line as Key=Value in Render
+# 3. For JWT_SECRET: Use a password generator
+# 4. For MONGODB_URI: Get from MongoDB Atlas
+# 5. For Razorpay: Get from Razorpay Dashboard
+# ===========================================
