@@ -13,11 +13,12 @@
 
 ## Step 2: Render.com Deployment
 
-### Method 1: Using render.yaml (Recommended)
+### Method 1: Using render.yaml with Root Setup (Recommended)
 1. Push your code to GitHub (already done)
 2. Connect your GitHub repo to Render
 3. Render will automatically detect the `render.yaml` file
-4. Set the following environment variables in Render dashboard:
+4. The root `server.js` will handle starting the backend from correct directory
+5. Set the following environment variables in Render dashboard:
 
 ```
 NODE_ENV=production
@@ -35,10 +36,22 @@ CLIENT_BASE_URL=https://your-frontend-domain.com
 ### Method 2: Manual Configuration
 If render.yaml doesn't work, use these manual settings in Render:
 
+**Option A - Root Directory (Recommended):**
+- **Root Directory:** `` (leave empty - use root)
+- **Build Command:** `npm install`
+- **Start Command:** `npm start`
+- **Node Version:** 18 or higher
+
+**Option B - Backend Directory:**
 - **Root Directory:** `backend/server`
 - **Build Command:** `npm install`
 - **Start Command:** `npm start`
 - **Node Version:** 18 or higher
+
+**Option C - Manual Commands:**
+- **Root Directory:** `` (leave empty)
+- **Build Command:** `cd backend/server && npm install`
+- **Start Command:** `cd backend/server && node index.js`
 
 ## Step 3: Environment Variables
 Set these in Render dashboard > Environment tab:

@@ -2,14 +2,9 @@ services:
   - type: web
     name: greenix-backend
     env: node
-    buildCommand: cd backend/server && npm install
-    startCommand: cd backend/server && npm start
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        fromService:
-          type: web
-          name: greenix-backend
-          property: port
     healthCheckPath: /api/test

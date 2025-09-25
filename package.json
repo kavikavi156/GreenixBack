@@ -2,16 +2,21 @@
   "name": "greenix-fullstack",
   "version": "1.0.0",
   "description": "Greenix Agricultural Platform - Full Stack Application",
+  "main": "server.js",
   "scripts": {
-    "start": "cd backend/server && npm start",
+    "start": "node server.js",
     "build": "cd backend/server && npm install",
-    "dev": "cd backend/server && npm run dev",
+    "dev": "node server.js",
     "install-backend": "cd backend/server && npm install",
-    "install-frontend": "cd frontend && npm install"
+    "install-frontend": "cd frontend && npm install",
+    "postinstall": "cd backend/server && npm install"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "child_process": "*"
   },
   "repository": {
     "type": "git",
