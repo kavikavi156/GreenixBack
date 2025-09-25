@@ -1,0 +1,22 @@
+{
+  "name": "greenix-fullstack",
+  "version": "1.0.0",
+  "description": "Greenix Agricultural Platform - Full Stack Application",
+  "scripts": {
+    "start": "cd backend/server && npm start",
+    "build": "cd backend/server && npm install",
+    "dev": "cd backend/server && npm run dev",
+    "install-backend": "cd backend/server && npm install",
+    "install-frontend": "cd frontend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kavikavi156/Greenix"
+  },
+  "author": "kavikavi156",
+  "license": "MIT"
+}

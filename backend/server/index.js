@@ -5,14 +5,29 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 
-app.use(cors());
+// Environment variables
+const PORT = process.env.PORT || 3001;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pavithratraders';
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? 
+  process.env.ALLOWED_ORIGINS.split(',') : 
+  ['http://localhost:5173', 'http://localhost:3000'];
+
+// CORS configuration
+app.use(cors({
+  origin: ALLOWED_ORIGINS,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 // Serve static files (uploaded images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// MongoDB connection (replace with your URI)
-mongoose.connect('mongodb://localhost:27017/pavithratraders', {
+// MongoDB connection with environment variable
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -74,12 +89,26 @@ try {
 }
 
 app.get('/', (req, res) => {
-  res.send('Backend API is running');
+  res.json({ 
+    message: 'Greenix Backend API is running', 
+    version: '1.0.0',
+    environment: NODE_ENV 
+  });
 });
 
-const PORT = process.env.PORT || 3001;
+// Health check endpoint for Render
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${NODE_ENV}`);
+  console.log(`MongoDB: ${MONGODB_URI.includes('localhost') ? 'Local' : 'Remote'}`);
 }).on('error', (err) => {
   console.error('Server startup error:', err);
 });
