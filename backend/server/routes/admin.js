@@ -843,10 +843,21 @@ router.get('/products/:id/price/:quantity', async (req, res) => {
   }
 });
 
+// Test endpoint for download reports
+router.get('/test-download', (req, res) => {
+  res.json({ 
+    message: 'Download endpoint is accessible',
+    availableFormats: ['pdf', 'excel', 'json'],
+    availablePeriods: ['yearly', 'monthly']
+  });
+});
+
 // Download reports endpoint
 router.get('/download-report', async (req, res) => {
   try {
     const { period, year, month, format } = req.query;
+    
+    console.log('Download report request:', { period, year, month, format });
     
     // Build date filter based on period
     let dateFilter = {};
