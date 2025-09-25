@@ -14,7 +14,7 @@ export default function LoginForm({ role, onLogin }) {
     try {
       console.log('Attempting login with:', { username, role });
       
-      const res = await fetch('http://localhost:3001/api/auth/login', {
+      const res = await fetch('https://greenix-3.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

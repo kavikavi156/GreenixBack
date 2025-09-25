@@ -98,7 +98,7 @@ export default function AddProduct({ token, onAdd, product, onUpdate, onCancel }
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/categories');
+        const response = await fetch('https://greenix-3.onrender.com/api/admin/categories');
         if (response.ok) {
           const data = await response.json();
           const categoryNames = data.map(cat => cat.name);
@@ -338,7 +338,7 @@ export default function AddProduct({ token, onAdd, product, onUpdate, onCancel }
 
       console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
 
-      const response = await fetch('http://localhost:3001/api/upload/single', {
+      const response = await fetch('https://greenix-3.onrender.com/api/upload/single', {
         method: 'POST',
         body: formDataUpload
       });
@@ -426,7 +426,7 @@ export default function AddProduct({ token, onAdd, product, onUpdate, onCancel }
     setCategoryLoading(true);
     try {
       // Add category to backend (optional - you can implement this endpoint)
-      const response = await fetch('http://localhost:3001/api/admin/categories', {
+      const response = await fetch('https://greenix-3.onrender.com/api/admin/categories', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -525,8 +525,8 @@ export default function AddProduct({ token, onAdd, product, onUpdate, onCancel }
 
       const res = await fetch(
         product 
-          ? `http://localhost:3001/api/products/${product._id}` 
-          : 'http://localhost:3001/api/products',
+          ? `https://greenix-3.onrender.com/api/products/${product._id}` 
+          : 'https://greenix-3.onrender.com/api/products',
         {
           method: product ? 'PUT' : 'POST',
           headers: {
@@ -933,7 +933,7 @@ export default function AddProduct({ token, onAdd, product, onUpdate, onCancel }
                   <label htmlFor="imageUpload" className="image-upload-label">
                     {formData.image ? (
                       <img 
-                        src={formData.image.startsWith('http') ? formData.image : `http://localhost:3001/uploads/${formData.image.replace(/^\/uploads\//, '')}`} 
+                        src={formData.image.startsWith('http') ? formData.image : `https://greenix-3.onrender.com/uploads/${formData.image.replace(/^\/uploads\//, '')}`} 
                         alt="Product preview" 
                         className="image-preview" 
                       />

@@ -35,7 +35,7 @@ export default function OrderSummary({
 
       console.log('Sending order payload:', orderPayload);
 
-      const response = await fetch(`http://localhost:3001/api/customer/order/${user.userId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/order/${user.userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,14 +21,14 @@ export default function EnhancedAdminDashboard({ token, onLogout }) {
     setLoading(true);
     try {
       // Fetch orders
-      const ordersRes = await fetch('http://localhost:3001/api/admin/orders', {
+      const ordersRes = await fetch('https://greenix-3.onrender.com/api/admin/orders', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const ordersData = await ordersRes.json();
       setOrders(ordersData);
 
       // Fetch products
-      const productsRes = await fetch('http://localhost:3001/api/products');
+      const productsRes = await fetch('https://greenix-3.onrender.com/api/products');
       const productsData = await productsRes.json();
       setProducts(productsData.products || productsData);
 
@@ -125,8 +125,8 @@ export default function EnhancedAdminDashboard({ token, onLogout }) {
                     <img 
                       src={
                         product.images?.length > 0 
-                          ? (product.images[0].startsWith('http') ? product.images[0] : `http://localhost:3001/uploads/${product.images[0].replace(/^\/uploads\//, '')}`)
-                          : (product.image.startsWith('http') ? product.image : `http://localhost:3001/uploads/${product.image.replace(/^\/uploads\//, '')}`)
+                          ? (product.images[0].startsWith('http') ? product.images[0] : `https://greenix-3.onrender.com/uploads/${product.images[0].replace(/^\/uploads\//, '')}`)
+                          : (product.image.startsWith('http') ? product.image : `https://greenix-3.onrender.com/uploads/${product.image.replace(/^\/uploads\//, '')}`)
                       }
                       alt={product.name}
                     />
@@ -224,8 +224,8 @@ export default function EnhancedAdminDashboard({ token, onLogout }) {
                   <img 
                     src={
                       product.images?.length > 0 
-                        ? (product.images[0].startsWith('http') ? product.images[0] : `http://localhost:3001/uploads/${product.images[0].replace(/^\/uploads\//, '')}`)
-                        : (product.image.startsWith('http') ? product.image : `http://localhost:3001/uploads/${product.image.replace(/^\/uploads\//, '')}`)
+                        ? (product.images[0].startsWith('http') ? product.images[0] : `https://greenix-3.onrender.com/uploads/${product.images[0].replace(/^\/uploads\//, '')}`)
+                        : (product.image.startsWith('http') ? product.image : `https://greenix-3.onrender.com/uploads/${product.image.replace(/^\/uploads\//, '')}`)
                     }
                     alt={product.name}
                   />

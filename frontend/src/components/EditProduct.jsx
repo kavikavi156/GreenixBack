@@ -15,7 +15,7 @@ export default function EditProduct({ token, product, onUpdate, onCancel }) {
     setLoading(true);
     
     try {
-      const res = await fetch(`http://localhost:3001/api/products/${product._id}`, {
+      const res = await fetch(`https://greenix-3.onrender.com/api/products/${product._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

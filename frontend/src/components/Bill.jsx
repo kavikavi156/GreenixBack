@@ -28,7 +28,7 @@ export default function Bill({
     try {
       if (token && user) {
         // Clear cart on server
-        const response = await fetch(`http://localhost:3001/api/customer/cart/${user.userId}/clear`, {
+        const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${user.userId}/clear`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,

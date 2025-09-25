@@ -17,7 +17,7 @@ export default function PrebookingPage({ token, user }) {
   async function fetchProducts() {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3001/api/products');
+      const res = await fetch('https://greenix-3.onrender.com/api/products');
       if (res.ok) {
         const data = await res.json();
         const productsArray = data.products || data;
@@ -47,7 +47,7 @@ export default function PrebookingPage({ token, user }) {
     setPrebookingInProgress(prev => ({ ...prev, [productId]: true }));
 
     try {
-      const res = await fetch(`http://localhost:3001/api/customer/prebook/${productId}`, {
+      const res = await fetch(`https://greenix-3.onrender.com/api/customer/prebook/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -193,7 +193,7 @@ export default function PrebookingPage({ token, user }) {
               <div className="product-image-container">
                 {product.images && product.images.length > 0 ? (
                   <img 
-                    src={`http://localhost:3001/uploads/product.images[0]`} 
+                    src={`https://greenix-3.onrender.com/uploads/product.images[0]`} 
                     alt={product.name}
                     className="product-image"
                     onError={(e) => {

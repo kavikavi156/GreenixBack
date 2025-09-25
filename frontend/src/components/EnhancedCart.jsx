@@ -37,7 +37,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
 
       console.log('Fetching cart for user:', userId);
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -164,7 +164,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/cleanup`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/cleanup`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -230,7 +230,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
                         <img 
                           src={item.product?.image?.startsWith('http') 
                             ? item.product?.image 
-                            : `http://localhost:3001/uploads/${item.product?.image}`
+                            : `https://greenix-3.onrender.com/uploads/${item.product?.image}`
                           }
                           alt={item.product?.name || 'Product'}
                           onError={(e) => {

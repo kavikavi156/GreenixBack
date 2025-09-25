@@ -73,7 +73,7 @@ export default function EnhancedHomePage() {
 
   async function fetchProducts() {
     try {
-      const response = await fetch('http://localhost:3001/api/products');
+      const response = await fetch('https://greenix-3.onrender.com/api/products');
       const data = await response.json();
       console.log('Fetched products:', data);
       setProducts(data.products || data || []);
@@ -91,7 +91,7 @@ export default function EnhancedHomePage() {
       const userId = decodedToken.userId;
 
       // Fetch cart count
-      const cartRes = await fetch(`http://localhost:3001/api/customer/cart/${userId}`, {
+      const cartRes = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (cartRes.ok) {
@@ -166,7 +166,7 @@ export default function EnhancedHomePage() {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ export default function EnhancedHomePage() {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${itemId}`, {
+      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${itemId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -308,7 +308,7 @@ export default function EnhancedHomePage() {
                   <img 
                     src={product.image?.startsWith('http') 
                       ? product.image 
-                      : `http://localhost:3001/uploads/${product.image}`
+                      : `https://greenix-3.onrender.com/uploads/${product.image}`
                     }
                     alt={product.name}
                     className="product-image"

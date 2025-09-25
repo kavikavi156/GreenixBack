@@ -17,7 +17,7 @@ const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClos
 
   const createRazorpayOrder = async (amount) => {
     try {
-      const response = await fetch('http://localhost:3001/razorpay/create-order', {
+      const response = await fetch('https://greenix-3.onrender.com/razorpay/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClos
 
   const verifyPayment = async (paymentData) => {
     try {
-      const response = await fetch('http://localhost:3001/razorpay/verify-payment', {
+      const response = await fetch('https://greenix-3.onrender.com/razorpay/verify-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -52,7 +52,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
     console.log('Fetching products from backend...');
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/products');
+      const res = await fetch('https://greenix-3.onrender.com/api/products');
       console.log('Products response status:', res.status);
       
       if (!res.ok) {
@@ -84,7 +84,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
   async function fetchWishlist() {
     if (!userId) return;
     try {
-      const res = await fetch(`http://localhost:3001/api/customer/wishlist/${userId}`, {
+      const res = await fetch(`https://greenix-3.onrender.com/api/customer/wishlist/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -154,7 +154,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
       const isInWishlist = wishlist.includes(productId);
       const method = isInWishlist ? 'DELETE' : 'POST';
       
-      const res = await fetch(`http://localhost:3001/api/customer/wishlist/${userId}/${productId}`, {
+      const res = await fetch(`https://greenix-3.onrender.com/api/customer/wishlist/${userId}/${productId}`, {
         method,
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -188,7 +188,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
   async function handleDelete(id) {
     if (!isAdmin) return;
     try {
-      await fetch(`http://localhost:3001/api/products/${id}`, {
+      await fetch(`https://greenix-3.onrender.com/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -201,7 +201,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
   async function togglePrebooking(productId, currentStatus) {
     if (!isAdmin) return;
     try {
-      const res = await fetch(`http://localhost:3001/api/admin/products/${productId}/prebooking`, {
+      const res = await fetch(`https://greenix-3.onrender.com/api/admin/products/${productId}/prebooking`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
