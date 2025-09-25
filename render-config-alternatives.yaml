@@ -1,0 +1,35 @@
+# Alternative Render.com Configuration
+# If the main render.yaml doesn't work, try this approach:
+
+# Method 1: Set rootDir in render.yaml (current approach)
+services:
+  - type: web
+    name: greenix-backend
+    env: node
+    rootDir: backend/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /api/health
+
+# Method 2: Manual Render Dashboard Configuration
+# If render.yaml doesn't work, configure manually in Render dashboard:
+# 1. Root Directory: backend/server
+# 2. Build Command: npm install
+# 3. Start Command: npm start
+# 4. Add all environment variables from render-env-template.txt
+
+# Method 3: Alternative launcher approach
+# Keep root directory empty and use our server.js launcher
+# services:
+#   - type: web
+#     name: greenix-backend
+#     env: node
+#     buildCommand: npm install && cd backend/server && npm install
+#     startCommand: node server.js
+#     envVars:
+#       - key: NODE_ENV
+#         value: production
+#     healthCheckPath: /api/health

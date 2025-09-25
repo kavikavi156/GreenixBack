@@ -2,9 +2,10 @@ services:
   - type: web
     name: greenix-backend
     env: node
+    rootDir: backend/server
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-    healthCheckPath: /api/test
+    healthCheckPath: /api/health

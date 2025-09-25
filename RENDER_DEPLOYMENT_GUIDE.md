@@ -26,7 +26,7 @@
    - **Name**: `greenix-backend`
    - **Region**: Choose closest to your users
    - **Branch**: `main`
-   - **Root Directory**: Leave empty (our launcher handles this)
+   - **Root Directory**: `backend/server` (IMPORTANT: This fixes the module path issue)
    - **Runtime**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
@@ -101,6 +101,22 @@ const API_BASE_URL = 'https://greenix-backend.onrender.com';
 ```
 
 ## 🐛 Troubleshooting Common Issues
+
+### ❌ "Cannot find module '/opt/render/project/src/index.js'" Error
+**This is the most common issue with nested directory structures!**
+
+**Solution 1** (Recommended): Set Root Directory
+- In Render dashboard, set **Root Directory** to: `backend/server`
+- This tells Render where your actual Node.js app is located
+
+**Solution 2**: Update render.yaml
+- Ensure your render.yaml has `rootDir: backend/server`
+- Commit and push the changes to trigger redeployment
+
+**Solution 3**: Manual Configuration
+- Delete the render.yaml file
+- Configure everything manually in Render dashboard
+- Set Root Directory to `backend/server`
 
 ### Build Fails
 - Check if all dependencies are in package.json
