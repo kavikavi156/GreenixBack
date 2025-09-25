@@ -1,10 +1,11 @@
 [build]
   publish = "frontend/dist"
-  command = "cd frontend && npm install && npm run build"
+  command = "cd frontend && rm -rf node_modules/.cache && npm ci && npm run build"
 
 [build.environment]
   VITE_API_BASE_URL = "https://greenix-3.onrender.com"
   NODE_VERSION = "18"
+  CI = "true"
 
 [[redirects]]
   from = "/*"
