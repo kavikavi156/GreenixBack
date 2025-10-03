@@ -11,7 +11,7 @@ export default function ProductShowcase() {
 
   const loadProducts = async () => {
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/products');
+      const response = await fetch('http://localhost:3001/api/products');
       if (response.ok) {
         const data = await response.json();
         setProducts(data);

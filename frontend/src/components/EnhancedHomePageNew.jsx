@@ -73,12 +73,28 @@ export default function EnhancedHomePage() {
 
   async function fetchProducts() {
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/products');
+      const response = await fetch('http://localhost:3001/api/products');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       console.log('Fetched products:', data);
-      setProducts(data.products || data || []);
+      
+      // Check if data contains error
+      if (data.error) {
+        console.error('Server returned error:', data);
+        setProducts([]);
+        return;
+      }
+      
+      // Ensure we have an array
+      const productsArray = Array.isArray(data) ? data : (data.products || []);
+      setProducts(productsArray);
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]); // Set empty array on error
     }
   }
 
@@ -91,7 +107,7 @@ export default function EnhancedHomePage() {
       const userId = decodedToken.userId;
 
       // Fetch cart count
-      const cartRes = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}`, {
+      const cartRes = await fetch(`http://localhost:3001/api/customer/cart/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (cartRes.ok) {
@@ -106,6 +122,12 @@ export default function EnhancedHomePage() {
   }
 
   function filterAndSortProducts() {
+    // Ensure products is an array
+    if (!Array.isArray(products)) {
+      console.log('Products is not an array:', products);
+      return [];
+    }
+
     let filtered = products;
     console.log('Filtering products:', { 
       totalProducts: products.length, 
@@ -166,7 +188,7 @@ export default function EnhancedHomePage() {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -209,7 +231,7 @@ export default function EnhancedHomePage() {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.userId;
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${itemId}`, {
+      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${itemId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -307,8 +329,8 @@ export default function EnhancedHomePage() {
                 >
                   <img 
                     src={product.image?.startsWith('http') 
-                      ? product.image 
-                      : `https://greenix-3.onrender.com/uploads/${product.image}`
+                      ? product.image.replace('https://greenix-3.onrender.com', 'http://localhost:3001')
+                      : `http://localhost:3001/uploads/${product.image}`
                     }
                     alt={product.name}
                     className="product-image"

@@ -7,7 +7,7 @@ const APIDebug = () => {
     console.log('VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
     console.log('Mode:', import.meta.env.MODE);
     console.log('All env vars:', import.meta.env);
-    console.log('Expected API URL: https://greenix-3.onrender.com');
+    console.log('Expected API URL: http://localhost:3001');
     console.log('=== END DEBUG ===');
   }, []);
 
@@ -22,7 +22,7 @@ const APIDebug = () => {
       zIndex: 9999,
       fontSize: '12px'
     }}>
-      API: {import.meta.env.VITE_API_BASE_URL || 'https://greenix-3.onrender.com'}
+      API: {import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'}
     </div>
   );
 };

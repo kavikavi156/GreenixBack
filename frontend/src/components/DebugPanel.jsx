@@ -33,7 +33,7 @@ const DebugPanel = () => {
           userId = decodedToken.userId;
           
           // Check if user exists
-          const userResponse = await fetch(`https://greenix-3.onrender.com/api/customer/debug/user/${userId}`);
+          const userResponse = await fetch(`http://localhost:3001/api/customer/debug/user/${userId}`);
           userExists = await userResponse.json();
         } catch (error) {
           console.error('Error decoding token:', error);
@@ -41,7 +41,7 @@ const DebugPanel = () => {
       }
       
       // Get all users
-      const usersResponse = await fetch('https://greenix-3.onrender.com/api/customer/debug/users');
+      const usersResponse = await fetch('http://localhost:3001/api/customer/debug/users');
       const allUsers = await usersResponse.json();
       
       setDebugInfo({
@@ -70,7 +70,7 @@ const DebugPanel = () => {
 
       console.log('Testing cart add with:', { userId, productId });
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const response = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

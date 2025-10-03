@@ -35,7 +35,7 @@ export default function Cart({ token, onClose }) {
     if (!userId) return;
     setLoading(true);
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/cart/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -62,7 +62,7 @@ export default function Cart({ token, onClose }) {
 
     setUpdating(true);
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function Cart({ token, onClose }) {
   async function removeFromCart(productId) {
     setUpdating(true);
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

@@ -5,7 +5,10 @@ services:
     rootDir: backend/server
     buildCommand: npm install
     startCommand: npm start
+    plan: free
     envVars:
       - key: NODE_ENV
         value: production
-    healthCheckPath: /api/health
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/products

@@ -86,7 +86,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
     setLoading(true);
     try {
       // Fetch orders
-      const ordersRes = await fetch('https://greenix-3.onrender.com/api/admin/orders', {
+      const ordersRes = await fetch('http://localhost:3001/api/admin/orders', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const ordersData = await ordersRes.json();
@@ -99,7 +99,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
       setOrders(ordersData || []);
 
       // Fetch products
-      const productsRes = await fetch('https://greenix-3.onrender.com/api/products');
+      const productsRes = await fetch('http://localhost:3001/api/products');
       const productsData = await productsRes.json();
       setProducts(productsData.products || productsData || []);
 
@@ -134,7 +134,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
 
   async function fetchCategories() {
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/categories');
+      const response = await fetch('http://localhost:3001/api/categories');
       const data = await response.json();
       setCategories(data.categories || []);
     } catch (error) {
@@ -150,7 +150,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function fetchMonthlyRevenue(year = selectedYear) {
     setRevenueLoading(true);
     try {
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/revenue/monthly?year=${year}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/revenue/monthly?year=${year}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -209,7 +209,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         formData.append('image', productForm.image);
       }
 
-      const response = await fetch('https://greenix-3.onrender.com/api/admin/products', {
+      const response = await fetch('http://localhost:3001/api/admin/products', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -245,7 +245,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function handleAddCategory(e) {
     e.preventDefault();
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/admin/categories', {
+      const response = await fetch('http://localhost:3001/api/admin/categories', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -271,7 +271,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function handleDeleteCategory(categoryId, categoryName) {
     if (window.confirm(`Are you sure you want to delete the category "${categoryName}"?`)) {
       try {
-        const response = await fetch(`https://greenix-3.onrender.com/api/admin/categories/${categoryId}`, {
+        const response = await fetch(`http://localhost:3001/api/admin/categories/${categoryId}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -293,7 +293,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function handleDeleteProduct(productId) {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        const response = await fetch(`https://greenix-3.onrender.com/api/admin/products/${productId}`, {
+        const response = await fetch(`http://localhost:3001/api/admin/products/${productId}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -349,7 +349,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         formData.append('image', productForm.image);
       }
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/products/${editingProduct._id}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/products/${editingProduct._id}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -395,7 +395,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         )
       );
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/orders/${orderId}/status`, {
+      const response = await fetch(`http://localhost:3001/api/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -779,7 +779,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
                   <tr key={product._id}>
                     <td>
                       <img 
-                        src={`https://greenix-3.onrender.com/uploads/${product.image}`} 
+                        src={`http://localhost:3001/uploads/${product.image}`} 
                         alt={product.name}
                         className="product-thumbnail"
                         onError={(e) => {
@@ -987,7 +987,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function handleAddAdmin(e) {
     e.preventDefault();
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/admin/create-admin', {
+      const response = await fetch('http://localhost:3001/api/admin/create-admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1011,7 +1011,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
 
   async function fetchAdminList() {
     try {
-      const response = await fetch('https://greenix-3.onrender.com/api/admin/admin-list', {
+      const response = await fetch('http://localhost:3001/api/admin/admin-list', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -1026,7 +1026,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
   async function handleDeleteAdmin(adminId) {
     if (window.confirm('Are you sure you want to delete this administrator?')) {
       try {
-        const response = await fetch(`https://greenix-3.onrender.com/api/admin/delete-admin/${adminId}`, {
+        const response = await fetch(`http://localhost:3001/api/admin/delete-admin/${adminId}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -1045,7 +1045,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
 
   async function handleToggleAdminStatus(adminId) {
     try {
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/toggle-admin-status/${adminId}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/toggle-admin-status/${adminId}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -1070,7 +1070,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         ...(salesReport.selectedPeriod === 'monthly' && { month: salesReport.selectedMonth })
       });
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/sales-report?${params}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/sales-report?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -1095,7 +1095,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         ...(salesReport.selectedPeriod === 'monthly' && { month: salesReport.selectedMonth })
       });
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/download-report?${params}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/download-report?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -1126,7 +1126,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         format: 'pdf'
       });
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/download-report?${params}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/download-report?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -1157,7 +1157,7 @@ export default function ProfessionalAdminDashboard({ token, onLogout }) {
         format: 'pdf'
       });
 
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/download-report?${params}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/download-report?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

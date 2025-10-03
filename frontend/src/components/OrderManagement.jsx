@@ -30,7 +30,7 @@ export default function OrderManagement({ token }) {
 
   async function fetchProducts() {
     try {
-      const res = await fetch('https://greenix-3.onrender.com/api/products');
+      const res = await fetch('http://localhost:3001/api/products');
       if (res.ok) {
         const productsData = await res.json();
         // Filter to only show products with prebooking enabled
@@ -100,12 +100,12 @@ export default function OrderManagement({ token }) {
       console.log('Fetching order data with token:', token);
       
       // Fetch regular orders (not prebooked)
-      const ordersRes = await fetch('https://greenix-3.onrender.com/api/admin/orders/ordered', {
+      const ordersRes = await fetch('http://localhost:3001/api/admin/orders/ordered', {
         headers: { Authorization: `Bearer ${token}` },
       });
       
       // Fetch prebookings
-      const prebookingsRes = await fetch('https://greenix-3.onrender.com/api/admin/orders/prebooked', {
+      const prebookingsRes = await fetch('http://localhost:3001/api/admin/orders/prebooked', {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -135,7 +135,7 @@ export default function OrderManagement({ token }) {
 
   async function updateOrderStatus(orderId, newStatus) {
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/admin/orders/${orderId}/status`, {
+      const res = await fetch(`http://localhost:3001/api/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ export default function OrderManagement({ token }) {
   // Toggle prebooking enabled status for a product
   async function togglePrebooking(productId, currentStatus) {
     try {
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/products/${productId}/prebooking`, {
+      const response = await fetch(`http://localhost:3001/api/admin/products/${productId}/prebooking`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ export default function OrderManagement({ token }) {
   // Update product stock and automatically process prebookings
   async function updateStock(productId, newStock) {
     try {
-      const response = await fetch(`https://greenix-3.onrender.com/api/admin/products/${productId}/stock`, {
+      const response = await fetch(`http://localhost:3001/api/admin/products/${productId}/stock`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -356,7 +356,7 @@ export default function OrderManagement({ token }) {
                       <div className="product-image-section">
                         {product.images && product.images.length > 0 ? (
                           <img 
-                            src={`https://greenix-3.onrender.com/uploads/product.images[0]`} 
+                            src={`http://localhost:3001/uploads/product.images[0]`} 
                             alt={product.name}
                             className="product-thumbnail"
                             onError={(e) => {

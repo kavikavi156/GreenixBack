@@ -91,7 +91,7 @@ export default function CustomerPage() {
     // Add item to cart with quantity 1 by default
     try {
       console.log('Making API call to add to cart');
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -62,7 +62,7 @@ export default function MyOrders({ token, onClose }) {
     try {
       console.log('Fetching orders for userId:', userId);
       setLoading(true);
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/orders/${userId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/orders/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -208,11 +208,11 @@ export default function MyOrders({ token, onClose }) {
                               item.product?.image 
                                 ? (item.product.image.startsWith('http') 
                                     ? item.product.image 
-                                    : `https://greenix-3.onrender.com/uploads/${item.product.image}`)
+                                    : `http://localhost:3001/uploads/${item.product.image}`)
                                 : item.product?.images?.[0]
                                   ? (item.product.images[0].startsWith('http')
                                       ? item.product.images[0]
-                                      : `https://greenix-3.onrender.com/uploads/${item.product.images[0]}`)
+                                      : `http://localhost:3001/uploads/${item.product.images[0]}`)
                                   : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPHN2Zz4K'
                             }
                             alt={item.name || item.product?.name || 'Product'} 

@@ -26,7 +26,7 @@ export default function Wishlist({ token, onClose }) {
   async function fetchWishlist() {
     try {
       setLoading(true);
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/wishlist/${userId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/wishlist/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,7 +47,7 @@ export default function Wishlist({ token, onClose }) {
 
   async function removeFromWishlist(productId) {
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/wishlist/${userId}/${productId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/wishlist/${userId}/${productId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ export default function Wishlist({ token, onClose }) {
 
   async function addToCart(productId) {
     try {
-      const res = await fetch(`https://greenix-3.onrender.com/api/customer/cart/${userId}/${productId}`, {
+      const res = await fetch(`http://localhost:3001/api/customer/cart/${userId}/${productId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
