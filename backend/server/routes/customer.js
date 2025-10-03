@@ -194,13 +194,19 @@ router.post('/cart/:userId/cleanup', async (req, res) => {
 // Customer: Clear entire cart
 router.post('/cart/:userId/clear', async (req, res) => {
   try {
+    console.log('Clear cart request received for userId:', req.params.userId);
+    console.log('Request headers:', req.headers);
+    
     const user = await User.findById(req.params.userId);
     if (!user) {
+      console.log('User not found:', req.params.userId);
       return res.status(404).json({ error: 'User not found' });
     }
 
+    console.log('User found:', user.username, 'Current cart length:', user.cart.length);
     user.cart = [];
     await user.save();
+    console.log('Cart cleared successfully for user:', user.username);
     
     res.status(200).json({ 
       message: 'Cart cleared successfully',
@@ -208,7 +214,8 @@ router.post('/cart/:userId/clear', async (req, res) => {
     });
   } catch (error) {
     console.error('Clear cart error:', error);
-    res.status(500).json({ error: 'Failed to clear cart' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Failed to clear cart', details: error.message });
   }
 });
 
