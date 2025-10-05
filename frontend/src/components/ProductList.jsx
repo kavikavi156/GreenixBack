@@ -52,7 +52,8 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
     console.log('Fetching products from backend...');
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/api/products');
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'https://greenixback-2.onrender.com';
+      const res = await fetch(`${apiUrl}/api/products`);
       console.log('Products response status:', res.status);
       
       if (!res.ok) {

@@ -87,7 +87,8 @@ export default function EnhancedHomePage() {
 
   async function fetchProducts() {
     try {
-      const response = await fetch('http://localhost:3001/api/products');
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'https://greenixback-2.onrender.com';
+      const response = await fetch(`${apiUrl}/api/products`);
       const data = await response.json();
       console.log('Fetched products:', data);
       setProducts(data.products || data || []);

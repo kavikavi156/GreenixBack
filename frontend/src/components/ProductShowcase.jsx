@@ -11,7 +11,8 @@ export default function ProductShowcase() {
 
   const loadProducts = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/products');
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'https://greenixback-2.onrender.com';
+      const response = await fetch(`${apiUrl}/api/products`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
