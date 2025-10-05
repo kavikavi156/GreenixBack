@@ -15,12 +15,25 @@ export default function ProductShowcase() {
       const response = await fetch(`${apiUrl}/api/products`);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        
+        // Check if the response contains an error
+        if (data.error) {
+          setError('Backend error: ' + data.error);
+          setProducts([]);
+          return;
+        }
+        
+        // Ensure we're setting an array
+        const productsArray = Array.isArray(data.products) ? data.products 
+                             : Array.isArray(data) ? data 
+                             : [];
+        setProducts(productsArray);
       } else {
         setError('Failed to load products');
       }
     } catch (error) {
       setError('Error loading products: ' + error.message);
+      setProducts([]);
     } finally {
       setLoading(false);
     }

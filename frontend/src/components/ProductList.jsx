@@ -63,10 +63,20 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
       const data = await res.json();
       console.log('Products data received:', data);
       
-      // Handle both old and new API response formats
-      const productsArray = data.products || data;
+      // Check if the response contains an error
+      if (data.error) {
+        console.error('Backend error:', data.error);
+        setProducts([]);
+        setError('Backend error: ' + data.error);
+        return;
+      }
       
-      if (Array.isArray(productsArray) && productsArray.length > 0) {
+      // Handle both old and new API response formats
+      const productsArray = Array.isArray(data.products) ? data.products 
+                           : Array.isArray(data) ? data 
+                           : [];
+      
+      if (productsArray.length > 0) {
         setProducts(productsArray);
         setError('');
       } else {

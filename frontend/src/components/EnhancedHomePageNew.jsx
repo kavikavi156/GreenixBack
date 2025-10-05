@@ -91,9 +91,22 @@ export default function EnhancedHomePage() {
       const response = await fetch(`${apiUrl}/api/products`);
       const data = await response.json();
       console.log('Fetched products:', data);
-      setProducts(data.products || data || []);
+      
+      // Check if the response contains an error
+      if (data.error) {
+        console.error('Backend error:', data.error);
+        setProducts([]); // Set empty array on error
+        return;
+      }
+      
+      // Ensure we're setting an array
+      const productsArray = Array.isArray(data.products) ? data.products 
+                           : Array.isArray(data) ? data 
+                           : [];
+      setProducts(productsArray);
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]); // Set empty array on error
     }
   }
 
@@ -121,6 +134,12 @@ export default function EnhancedHomePage() {
   }
 
   function filterAndSortProducts() {
+    // Safety check: ensure products is an array
+    if (!Array.isArray(products)) {
+      console.error('Products is not an array:', products);
+      return [];
+    }
+    
     let filtered = products;
     console.log('Filtering products:', { 
       totalProducts: products.length, 
