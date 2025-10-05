@@ -11,12 +11,104 @@ export default function SignupForm({ role, onSignup }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
+  // Email validation function
+  function validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  // Password validation function
+  function validatePassword(password) {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasNonalphas = /\W/.test(password);
+    
+    return {
+      minLength: password.length >= minLength,
+      hasUpperCase,
+      hasLowerCase,
+      hasNumbers,
+      hasSpecialChar: hasNonalphas,
+      isValid: password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers
+    };
+  }
+
+  // Real-time validation
   function handleChange(e) {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Clear previous validation errors for this field
+    setValidationErrors({
+      ...validationErrors,
+      [name]: ''
+    });
+
+    // Real-time validation
+    if (name === 'email' && value) {
+      if (!validateEmail(value)) {
+        setValidationErrors(prev => ({
+          ...prev,
+          email: 'Please enter a valid email address (e.g., user@example.com)'
+        }));
+      }
+    }
+
+    if (name === 'password' && value) {
+      const passwordCheck = validatePassword(value);
+      if (!passwordCheck.isValid) {
+        let errorMsg = 'Password must contain: ';
+        const requirements = [];
+        if (!passwordCheck.minLength) requirements.push('at least 8 characters');
+        if (!passwordCheck.hasUpperCase) requirements.push('uppercase letter');
+        if (!passwordCheck.hasLowerCase) requirements.push('lowercase letter');
+        if (!passwordCheck.hasNumbers) requirements.push('number');
+        
+        setValidationErrors(prev => ({
+          ...prev,
+          password: errorMsg + requirements.join(', ')
+        }));
+      }
+    }
+
+    if (name === 'confirmPassword' && value) {
+      if (value !== formData.password) {
+        setValidationErrors(prev => ({
+          ...prev,
+          confirmPassword: 'Passwords do not match'
+        }));
+      }
+    }
+
+    if (name === 'name' && value) {
+      if (value.length < 2) {
+        setValidationErrors(prev => ({
+          ...prev,
+          name: 'Name must be at least 2 characters long'
+        }));
+      }
+    }
+
+    if (name === 'username' && value) {
+      if (value.length < 3) {
+        setValidationErrors(prev => ({
+          ...prev,
+          username: 'Username must be at least 3 characters long'
+        }));
+      } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        setValidationErrors(prev => ({
+          ...prev,
+          username: 'Username can only contain letters, numbers, and underscores'
+        }));
+      }
+    }
   }
 
   async function handleSubmit(e) {
@@ -25,24 +117,65 @@ export default function SignupForm({ role, onSignup }) {
     setSuccess('');
     setIsLoading(true);
 
-    // Validation
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    // Comprehensive validation
+    const errors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters long';
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      errors.email = 'Please enter a valid email address (e.g., user@example.com)';
+    }
+
+    // Username validation
+    if (!formData.username.trim()) {
+      errors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      errors.username = 'Username must be at least 3 characters long';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      errors.username = 'Username can only contain letters, numbers, and underscores';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else {
+      const passwordCheck = validatePassword(formData.password);
+      if (!passwordCheck.isValid) {
+        let errorMsg = 'Password must contain: ';
+        const requirements = [];
+        if (!passwordCheck.minLength) requirements.push('at least 8 characters');
+        if (!passwordCheck.hasUpperCase) requirements.push('uppercase letter');
+        if (!passwordCheck.hasLowerCase) requirements.push('lowercase letter');
+        if (!passwordCheck.hasNumbers) requirements.push('number');
+        errors.password = errorMsg + requirements.join(', ');
+      }
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    // If there are validation errors, show them and stop
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setError('Please fix the validation errors above');
       setIsLoading(false);
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      setIsLoading(false);
-      return;
-    }
-
-    if (!formData.email.includes('@')) {
-      setError('Please enter a valid email address');
-      setIsLoading(false);
-      return;
-    }
+    // Clear validation errors if all is good
+    setValidationErrors({});
 
     try {
       console.log('Attempting signup with:', { 
@@ -105,47 +238,74 @@ export default function SignupForm({ role, onSignup }) {
           onChange={handleChange}
           required
           disabled={isLoading}
-          className="enhanced-input"
+          className={`enhanced-input ${validationErrors.name ? 'error' : ''}`}
         />
+        {validationErrors.name && <span className="validation-error">{validationErrors.name}</span>}
       </div>
       
       <div className="input-group">
         <input
           type="email"
           name="email"
-          placeholder="Email Address"
+          placeholder="Email Address (e.g., user@example.com)"
           value={formData.email}
           onChange={handleChange}
           required
           disabled={isLoading}
-          className="enhanced-input"
+          className={`enhanced-input ${validationErrors.email ? 'error' : ''}`}
         />
+        {validationErrors.email && <span className="validation-error">{validationErrors.email}</span>}
       </div>
       
       <div className="input-group">
         <input
           type="text"
           name="username"
-          placeholder="Username"
+          placeholder="Username (letters, numbers, underscores only)"
           value={formData.username}
           onChange={handleChange}
           required
           disabled={isLoading}
-          className="enhanced-input"
+          className={`enhanced-input ${validationErrors.username ? 'error' : ''}`}
         />
+        {validationErrors.username && <span className="validation-error">{validationErrors.username}</span>}
       </div>
       
       <div className="input-group">
         <input
           type="password"
           name="password"
-          placeholder="Password (min 6 characters)"
+          placeholder="Password (8+ chars, uppercase, lowercase, number)"
           value={formData.password}
           onChange={handleChange}
           required
           disabled={isLoading}
-          className="enhanced-input"
+          className={`enhanced-input ${validationErrors.password ? 'error' : ''}`}
         />
+        {validationErrors.password && <span className="validation-error">{validationErrors.password}</span>}
+        {formData.password && (
+          <div className="password-strength">
+            {(() => {
+              const check = validatePassword(formData.password);
+              return (
+                <div className="strength-indicators">
+                  <span className={`indicator ${check.minLength ? 'valid' : 'invalid'}`}>
+                    ✓ 8+ characters
+                  </span>
+                  <span className={`indicator ${check.hasUpperCase ? 'valid' : 'invalid'}`}>
+                    ✓ Uppercase letter
+                  </span>
+                  <span className={`indicator ${check.hasLowerCase ? 'valid' : 'invalid'}`}>
+                    ✓ Lowercase letter
+                  </span>
+                  <span className={`indicator ${check.hasNumbers ? 'valid' : 'invalid'}`}>
+                    ✓ Number
+                  </span>
+                </div>
+              );
+            })()}
+          </div>
+        )}
       </div>
       
       <div className="input-group">
@@ -157,8 +317,9 @@ export default function SignupForm({ role, onSignup }) {
           onChange={handleChange}
           required
           disabled={isLoading}
-          className="enhanced-input"
+          className={`enhanced-input ${validationErrors.confirmPassword ? 'error' : ''}`}
         />
+        {validationErrors.confirmPassword && <span className="validation-error">{validationErrors.confirmPassword}</span>}
       </div>
       
       <button 

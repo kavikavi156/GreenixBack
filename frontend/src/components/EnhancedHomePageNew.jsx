@@ -35,6 +35,20 @@ export default function EnhancedHomePage() {
     return icons[category] || '📦';
   }
 
+  // Helper function to get appropriate greeting based on time of day
+  function getGreetingTime() {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      return 'Morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Evening';
+    } else {
+      return 'Evening';
+    }
+  }
+
   useEffect(() => {
     checkAuthStatus();
     fetchProducts();
@@ -74,27 +88,11 @@ export default function EnhancedHomePage() {
   async function fetchProducts() {
     try {
       const response = await fetch('http://localhost:3001/api/products');
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
       const data = await response.json();
       console.log('Fetched products:', data);
-      
-      // Check if data contains error
-      if (data.error) {
-        console.error('Server returned error:', data);
-        setProducts([]);
-        return;
-      }
-      
-      // Ensure we have an array
-      const productsArray = Array.isArray(data) ? data : (data.products || []);
-      setProducts(productsArray);
+      setProducts(data.products || data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
-      setProducts([]); // Set empty array on error
     }
   }
 
@@ -122,12 +120,6 @@ export default function EnhancedHomePage() {
   }
 
   function filterAndSortProducts() {
-    // Ensure products is an array
-    if (!Array.isArray(products)) {
-      console.log('Products is not an array:', products);
-      return [];
-    }
-
     let filtered = products;
     console.log('Filtering products:', { 
       totalProducts: products.length, 
@@ -272,7 +264,7 @@ export default function EnhancedHomePage() {
               {isLoggedIn ? (
                 <>
                   <div className="user-welcome">
-                    <span className="user-greeting">Welcome, {user?.name || 'Customer'}</span>
+                    <span className="user-greeting">Hi {user?.name || 'Customer'}! 👋</span>
                   </div>
                   <div className="cart-wishlist-icons">
                     <button 
@@ -311,6 +303,157 @@ export default function EnhancedHomePage() {
         </div>
       </header>
 
+      {/* Fertilizer Shop Welcome Banner */}
+      <div className="fertilizer-welcome-banner">
+        <div className="welcome-content">
+          <div className="welcome-text-section">
+            <div className="welcome-header">
+              <h1 className="shop-title">
+                {isLoggedIn ? (
+                  <>Hello {user?.name}! 👋 Ready to grow something amazing?</>
+                ) : (
+                  <>Pavithra Traders 🌱 Quality Seeds & Fertilizers</>
+                )}
+              </h1>
+              <p className="shop-subtitle">
+                {isLoggedIn ? (
+                  "Your farm, your success story. Browse our fresh collection of seeds, fertilizers, and farming tools."
+                ) : (
+                  "Fresh seeds, quality fertilizers, and everything you need for a successful harvest. Trusted by farmers since 1995."
+                )}
+              </p>
+            </div>
+
+            {/* Shop Highlights */}
+            <div className="shop-highlights">
+              <div className="highlight-card">
+                <div className="highlight-icon">🌾</div>
+                <h3>Fresh Fertilizers</h3>
+                <p>Boost your crop growth with our organic and mineral fertilizers</p>
+              </div>
+              <div className="highlight-card">
+                <div className="highlight-icon">🌱</div>
+                <h3>Quality Seeds</h3>
+                <p>High-yield seeds for vegetables, grains, and seasonal crops</p>
+              </div>
+              <div className="highlight-card">
+                <div className="highlight-icon">🛡️</div>
+                <h3>Plant Care</h3>
+                <p>Protect your crops with safe and effective pest control solutions</p>
+              </div>
+              <div className="highlight-card">
+                <div className="highlight-icon">🚜</div>
+                <h3>Farm Tools</h3>
+                <p>Essential tools and equipment to make farming easier and faster</p>
+              </div>
+            </div>
+
+            {/* Shop Stats */}
+            <div className="shop-stats">
+              <div className="stat-box">
+                <span className="stat-number">25+</span>
+                <span className="stat-label">Years Serving Farmers</span>
+              </div>
+              <div className="stat-box">
+                <span className="stat-number">10,000+</span>
+                <span className="stat-label">Happy Customers</span>
+              </div>
+              <div className="stat-box">
+                <span className="stat-number">500+</span>
+                <span className="stat-label">Premium Products</span>
+              </div>
+              <div className="stat-box">
+                <span className="stat-number">100%</span>
+                <span className="stat-label">Quality Guarantee</span>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            {!isLoggedIn && (
+              <div className="welcome-cta">
+                <Link to="/login" className="cta-btn primary">
+                  🌾 Start Shopping
+                </Link>
+                <a href="#products" className="cta-btn secondary">
+                  🛍️ View Products
+                </a>
+              </div>
+            )}
+
+            {isLoggedIn && (
+              <div className="user-welcome-actions">
+                <div className="user-stats">
+                  <div className="user-stat">
+                    <span className="stat-icon">🛒</span>
+                    <div className="stat-info">
+                      <span className="stat-value">{cartCount}</span>
+                      <span className="stat-name">Items in Cart</span>
+                    </div>
+                  </div>
+                  <div className="user-stat">
+                    <span className="stat-icon">⭐</span>
+                    <div className="stat-info">
+                      <span className="stat-value">4.9</span>
+                      <span className="stat-name">Customer Rating</span>
+                    </div>
+                  </div>
+                  <div className="user-stat">
+                    <span className="stat-icon">🏆</span>
+                    <div className="stat-info">
+                      <span className="stat-value">Premium</span>
+                      <span className="stat-name">Membership</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="quick-action-buttons">
+                  <button 
+                    onClick={() => setShowCart(true)}
+                    className="quick-btn cart-btn"
+                  >
+                    🛒 Review Cart ({cartCount} {cartCount === 1 ? 'item' : 'items'})
+                  </button>
+                  <button 
+                    onClick={() => setShowMyOrders(true)}
+                    className="quick-btn orders-btn"
+                  >
+                    📦 Order History
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Special Offer Alert */}
+            <div className="special-offer-alert">
+              <div className="offer-content">
+                <span className="offer-icon">🔥</span>
+                <div className="offer-text">
+                  <strong>October Sale!</strong>
+                  <p>Save big this month - 20% off fertilizers and 15% off seeds. Perfect for winter planting season!</p>
+                </div>
+                <div className="offer-badge">This Month</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Visual Elements */}
+          <div className="welcome-visuals">
+            <div className="floating-farm-icons">
+              <span className="farm-icon icon-1">🌾</span>
+              <span className="farm-icon icon-2">🚜</span>
+              <span className="farm-icon icon-3">🌱</span>
+              <span className="farm-icon icon-4">🌿</span>
+              <span className="farm-icon icon-5">🌻</span>
+              <span className="farm-icon icon-6">🥕</span>
+            </div>
+            <div className="shop-badge">
+              <span className="badge-text">Trusted Since</span>
+              <span className="badge-year">1995</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Products Section */}
       <div className="products-section">
         <div className="section-title">
@@ -329,7 +472,7 @@ export default function EnhancedHomePage() {
                 >
                   <img 
                     src={product.image?.startsWith('http') 
-                      ? product.image.replace('https://greenix-3.onrender.com', 'http://localhost:3001')
+                      ? product.image 
                       : `http://localhost:3001/uploads/${product.image}`
                     }
                     alt={product.name}

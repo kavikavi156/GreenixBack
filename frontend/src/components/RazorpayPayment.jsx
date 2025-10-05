@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../css/RazorpayPayment.css';
 
 const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -16,10 +15,8 @@ const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClos
     });
   };
 
-  const createRazorpayOrder = async (amount, retryCount = 0) => {
+  const createRazorpayOrder = async (amount) => {
     try {
-      console.log(`Attempting to create order (attempt ${retryCount + 1})`);
-      
       const response = await fetch('http://localhost:3001/razorpay/create-order', {
         method: 'POST',
         headers: {
@@ -32,23 +29,10 @@ const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClos
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log('Order created successfully:', data);
       return data;
     } catch (error) {
       console.error('Error creating order:', error);
-      
-      // If it's a connection error and we haven't retried too many times
-      if (error.name === 'TypeError' && error.message.includes('Failed to fetch') && retryCount < 2) {
-        console.log(`Retrying in 2 seconds... (attempt ${retryCount + 1}/3)`);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return createRazorpayOrder(amount, retryCount + 1);
-      }
-      
       throw error;
     }
   };
@@ -204,6 +188,143 @@ const RazorpayPayment = ({ orderData, onPaymentSuccess, onPaymentFailure, onClos
           </button>
         )}
       </div>
+
+      <style jsx>{`
+        .razorpay-payment-container {
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 20px;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-header {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+
+        .payment-header h3 {
+          color: #2E7D32;
+          margin-bottom: 8px;
+        }
+
+        .payment-header p {
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+        }
+
+        .payment-loading {
+          text-align: center;
+          padding: 20px;
+        }
+
+        .spinner {
+          border: 3px solid #f3f3f3;
+          border-top: 3px solid #2E7D32;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .payment-error {
+          background: #ffebee;
+          border: 1px solid #ef5350;
+          border-radius: 4px;
+          padding: 15px;
+          margin-bottom: 20px;
+          text-align: center;
+        }
+
+        .payment-error p {
+          color: #c62828;
+          margin-bottom: 10px;
+        }
+
+        .retry-btn {
+          background: #ef5350;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .payment-info {
+          margin: 20px 0;
+        }
+
+        .security-info {
+          background: #e8f5e8;
+          padding: 15px;
+          border-radius: 4px;
+          margin-bottom: 15px;
+        }
+
+        .security-info h4 {
+          color: #2E7D32;
+          margin-bottom: 5px;
+        }
+
+        .payment-methods h4 {
+          margin-bottom: 10px;
+        }
+
+        .method-icons {
+          display: flex;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        .method-icons span {
+          background: #f5f5f5;
+          padding: 8px 12px;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+
+        .payment-actions {
+          display: flex;
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .cancel-btn, .pay-now-btn {
+          flex: 1;
+          padding: 12px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        .cancel-btn {
+          background: #f5f5f5;
+          color: #333;
+        }
+
+        .pay-now-btn {
+          background: #2E7D32;
+          color: white;
+        }
+
+        .pay-now-btn:hover {
+          background: #1B5E20;
+        }
+
+        .cancel-btn:hover {
+          background: #e0e0e0;
+        }
+      `}</style>
     </div>
   );
 };

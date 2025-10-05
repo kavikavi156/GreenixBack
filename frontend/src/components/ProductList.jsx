@@ -89,7 +89,7 @@ export default function ProductList({ token, isAdmin, onPrebook, onAddToCart, on
       });
       if (res.ok) {
         const data = await res.json();
-        setWishlist(data.wishlist.map(item => item.product._id || item.product));
+        setWishlist(data.items.map(item => item.product._id || item.product));
       }
     } catch (err) {
       console.error('Failed to fetch wishlist:', err);

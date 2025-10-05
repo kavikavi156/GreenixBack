@@ -16,7 +16,6 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ?
   [
     'http://localhost:5173', 
     'http://localhost:3000',
-    'http://localhost:5174',
     'https://greenixx.netlify.app',
     'https://greenix-3.onrender.com'
   ];
@@ -46,32 +45,17 @@ app.use(express.json());
 // Serve static files (uploaded images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// MongoDB connection with environment variable and error handling
-let mongoConnected = false;
-
+// MongoDB connection with environment variable
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  connectTimeoutMS: 10000, // Give up initial connection after 10s
-}).catch(err => {
-  console.log('❌ MongoDB connection failed, will use sample data');
-  console.log('Error:', err.message);
 });
 
 const db = mongoose.connection;
-db.on('error', (err) => {
-  console.log('❌ MongoDB connection error:', err.message);
-  mongoConnected = false;
-});
-
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log('✅ Connected to MongoDB');
-  mongoConnected = true;
+  console.log('Connected to MongoDB');
 });
-
-// Export connection status for routes to use
-global.mongoConnected = () => mongoConnected;
 
 // Error handling middleware
 app.use((err, req, res, next) => {

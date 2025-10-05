@@ -229,7 +229,7 @@ export default function EnhancedCart({ isOpen, onClose, onCartUpdate }) {
                       {item.product?.image ? (
                         <img 
                           src={item.product?.image?.startsWith('http') 
-                            ? item.product?.image.replace('https://greenix-3.onrender.com', 'http://localhost:3001') 
+                            ? item.product?.image 
                             : `http://localhost:3001/uploads/${item.product?.image}`
                           }
                           alt={item.product?.name || 'Product'}

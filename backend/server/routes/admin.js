@@ -1,10 +1,12 @@
 const express = require('express');
 const Order = require('../models/Order.js');
 const Product = require('../models/Product.js');
+const User = require('../models/User.js');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 const WhatsAppNotificationService = require('../services/WhatsAppNotificationService');
 const router = express.Router();
 
@@ -1007,6 +1009,160 @@ router.get('/download-report', async (req, res) => {
   } catch (error) {
     console.error('Error generating report:', error);
     res.status(500).json({ error: 'Failed to generate report' });
+  }
+});
+
+// Create Admin Route
+router.post('/create-admin', async (req, res) => {
+  try {
+    const { name, email, password, phone, role = 'admin' } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        error: 'Name, email, and password are required' 
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ 
+        error: 'User with this email already exists' 
+      });
+    }
+
+    // Generate username from email
+    const username = email.split('@')[0];
+    
+    // Check if username already exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ 
+        error: 'Username already exists' 
+      });
+    }
+
+    // Hash password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create new admin user
+    const newAdmin = new User({
+      name,
+      email,
+      username,
+      password: hashedPassword,
+      role: role === 'admin' ? 'admin' : 'customer',
+      isActive: true,
+      address: {
+        phone: phone || ''
+      }
+    });
+
+    await newAdmin.save();
+
+    // Return success (don't send password back)
+    const { password: _, ...adminData } = newAdmin.toObject();
+    
+    res.status(201).json({
+      message: 'Administrator created successfully',
+      admin: adminData
+    });
+
+  } catch (error) {
+    console.error('Error creating admin:', error);
+    res.status(500).json({ 
+      error: 'Failed to create administrator', 
+      details: error.message 
+    });
+  }
+});
+
+// Get Admin List Route
+router.get('/admin-list', async (req, res) => {
+  try {
+    // Find all users with admin role, excluding passwords
+    const admins = await User.find({ role: 'admin' })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    res.json(admins);
+  } catch (error) {
+    console.error('Error fetching admin list:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch administrator list', 
+      details: error.message 
+    });
+  }
+});
+
+// Delete Admin Route
+router.delete('/delete-admin/:adminId', async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    // Prevent deletion of the last admin (for safety)
+    const adminCount = await User.countDocuments({ role: 'admin' });
+    if (adminCount <= 1) {
+      return res.status(400).json({ 
+        error: 'Cannot delete the last administrator' 
+      });
+    }
+
+    // Delete the admin
+    const deletedAdmin = await User.findByIdAndDelete(adminId);
+    
+    if (!deletedAdmin) {
+      return res.status(404).json({ 
+        error: 'Administrator not found' 
+      });
+    }
+
+    res.json({ 
+      message: 'Administrator deleted successfully',
+      deletedAdmin: deletedAdmin.name 
+    });
+
+  } catch (error) {
+    console.error('Error deleting admin:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete administrator', 
+      details: error.message 
+    });
+  }
+});
+
+// Toggle Admin Status Route
+router.patch('/toggle-admin-status/:adminId', async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    const admin = await User.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({ 
+        error: 'Administrator not found' 
+      });
+    }
+
+    // Toggle the isActive status (add this field if it doesn't exist)
+    admin.isActive = !admin.isActive;
+    await admin.save();
+
+    // Return without password
+    const { password: _, ...adminData } = admin.toObject();
+
+    res.json({ 
+      message: `Administrator ${admin.isActive ? 'activated' : 'deactivated'} successfully`,
+      admin: adminData 
+    });
+
+  } catch (error) {
+    console.error('Error toggling admin status:', error);
+    res.status(500).json({ 
+      error: 'Failed to update administrator status', 
+      details: error.message 
+    });
   }
 });
 

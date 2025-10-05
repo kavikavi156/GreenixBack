@@ -723,3 +723,92 @@
   margin-bottom: 1rem;
   border: 1px solid rgba(40, 167, 69, 0.2);
 }
+
+/* Validation Error Styles */
+.enhanced-input.error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+}
+
+.validation-error {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strength-indicators {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.indicator.valid {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.indicator.invalid {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.indicator.valid::before {
+  content: '✓';
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.indicator.invalid::before {
+  content: '✗';
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Input Focus States */
+.enhanced-input:focus {
+  outline: none;
+  border-color: rgba(102, 126, 234, 0.8);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.enhanced-input.error:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+/* Responsive Validation */
+@media (max-width: 768px) {
+  .strength-indicators {
+    grid-template-columns: 1fr;
+  }
+  
+  .validation-error {
+    font-size: 0.8rem;
+  }
+  
+  .indicator {
+    font-size: 0.75rem;
+  }
+}

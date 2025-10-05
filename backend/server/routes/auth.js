@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'replace_this_with_a_secure_secret';
+const JWT_SECRET = 'replace_this_with_a_secure_secret';
 
 // Register (admin or customer)
 router.post('/register', async (req, res) => {

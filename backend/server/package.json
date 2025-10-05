@@ -9,6 +9,7 @@
     "build": "babel . --out-dir dist --ignore node_modules"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "csv-writer": "^1.6.0",

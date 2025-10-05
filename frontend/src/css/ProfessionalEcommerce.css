@@ -263,6 +263,466 @@ body {
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
+/* Fertilizer Shop Welcome Banner */
+.fertilizer-welcome-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 0;
+  margin: 0;
+}
+
+.fertilizer-welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="farmPattern" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100%" height="100%" fill="url(%23farmPattern)"/></svg>');
+  pointer-events: none;
+}
+
+.welcome-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-text-section {
+  color: white;
+}
+
+.shop-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  background: linear-gradient(45deg, #ffffff, #f0f8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shop-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.95;
+  line-height: 1.7;
+}
+
+/* Shop Highlights */
+.shop-highlights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.highlight-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.highlight-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.highlight-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.highlight-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.highlight-card p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Shop Stats */
+.shop-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.stat-box {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-3px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, #ffffff, #f0f8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Welcome CTA */
+.welcome-cta {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.cta-btn {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: 2px solid transparent;
+}
+
+.cta-btn.primary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.cta-btn.primary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.cta-btn.secondary {
+  background: transparent;
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+/* User Welcome Actions */
+.user-welcome-actions {
+  margin-top: 2rem;
+}
+
+.user-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.user-stat {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  flex: 1;
+}
+
+.user-stat .stat-icon {
+  font-size: 1.5rem;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-name {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.quick-action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.quick-btn {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quick-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Special Offer Alert */
+.special-offer-alert {
+  margin: 2.5rem 0;
+  background: rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 15px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.offer-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.offer-icon {
+  font-size: 2rem;
+  animation: pulse 2s infinite;
+}
+
+.offer-text strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #FFD700;
+}
+
+.offer-text p {
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.offer-badge {
+  background: #FFD700;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+/* Welcome Visuals */
+.welcome-visuals {
+  position: relative;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-farm-icons {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.farm-icon {
+  position: absolute;
+  font-size: 2.5rem;
+  animation: farmFloat 8s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.farm-icon.icon-1 {
+  top: 15%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.farm-icon.icon-2 {
+  top: 60%;
+  right: 20%;
+  animation-delay: 1.3s;
+}
+
+.farm-icon.icon-3 {
+  bottom: 20%;
+  left: 30%;
+  animation-delay: 2.6s;
+}
+
+.farm-icon.icon-4 {
+  top: 25%;
+  right: 35%;
+  animation-delay: 3.9s;
+}
+
+.farm-icon.icon-5 {
+  bottom: 45%;
+  left: 10%;
+  animation-delay: 5.2s;
+}
+
+.farm-icon.icon-6 {
+  top: 70%;
+  left: 60%;
+  animation-delay: 6.5s;
+}
+
+.shop-badge {
+  position: absolute;
+  bottom: 20%;
+  right: 20%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.badge-text {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.badge-year {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+/* Animations */
+@keyframes farmFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(10deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .welcome-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .shop-highlights {
+    grid-template-columns: 1fr;
+  }
+  
+  .shop-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .fertilizer-welcome-banner {
+    padding: 3rem 0;
+  }
+  
+  .welcome-content {
+    padding: 0 1rem;
+  }
+  
+  .shop-title {
+    font-size: 2rem;
+  }
+  
+  .shop-subtitle {
+    font-size: 1rem;
+  }
+  
+  .shop-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .user-stats {
+    flex-direction: column;
+  }
+  
+  .welcome-cta,
+  .quick-action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .offer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .offer-badge {
+    margin: 1rem 0 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-title {
+    font-size: 1.75rem;
+  }
+  
+  .highlight-card {
+    padding: 1rem;
+  }
+  
+  .farm-icon {
+    font-size: 2rem;
+  }
+}
+
 /* Products Grid */
 .products-section {
   max-width: 1400px;

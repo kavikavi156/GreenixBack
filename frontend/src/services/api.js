@@ -2,7 +2,7 @@
 // This file centralizes all API endpoints and configuration
 
 // Base URLs for different environments
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://greenix-3.onrender.com';
 
 console.log('API Base URL:', API_BASE_URL);
 console.log('Environment:', import.meta.env.MODE);

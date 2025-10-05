@@ -159,7 +159,7 @@ export default function ProductDetails({ productId, token, onClose, onAddToCart 
       });
       if (response.ok) {
         const data = await response.json();
-        setIsInWishlist(data.wishlist && data.wishlist.some(item => item._id === productId));
+        setIsInWishlist(data.items.some(item => item.product._id === productId));
       }
     } catch (err) {
       console.error('Error checking wishlist status:', err);
@@ -364,12 +364,12 @@ export default function ProductDetails({ productId, token, onClose, onAddToCart 
                   if (product.images && product.images.length > 0) {
                     const selectedImage = product.images[selectedImageIndex] || product.image;
                     return selectedImage?.startsWith('http') 
-                      ? selectedImage.replace('https://greenix-3.onrender.com', 'http://localhost:3001') 
+                      ? selectedImage 
                       : `http://localhost:3001/uploads/${selectedImage}`;
                   }
                   // Otherwise show the main product image
                   return product.image?.startsWith('http') 
-                    ? product.image.replace('https://greenix-3.onrender.com', 'http://localhost:3001') 
+                    ? product.image 
                     : `http://localhost:3001/uploads/${product.image}`;
                 })()}
                 alt={product.name}
@@ -392,7 +392,7 @@ export default function ProductDetails({ productId, token, onClose, onAddToCart 
                   <img
                     key={index}
                     src={image?.startsWith('http') 
-                      ? image.replace('https://greenix-3.onrender.com', 'http://localhost:3001') 
+                      ? image 
                       : `http://localhost:3001/uploads/${image}`
                     }
                     alt={`${product.name} view ${index + 1}`}
