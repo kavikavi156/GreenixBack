@@ -6,9 +6,9 @@ const path = require('path');
 const app = express();
 
 // Environment variables
-const PORT = process.env.PORT || 3001;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pavithratraders';
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const PORT = process.env.PORT || 10000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://naveenk:kavi%402023@cluster0.srgtbbb.mongodb.net/pavithratraders?retryWrites=true&w=majority&appName=Cluster0';
+const NODE_ENV = process.env.NODE_ENV || 'production';
 
 // CORS allowed origins - includes Netlify domain
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? 
@@ -16,8 +16,9 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ?
   [
     'http://localhost:5173', 
     'http://localhost:3000',
+    'http://localhost:5174',
     'https://greenixx.netlify.app',
-    'https://greenix-3.onrender.com'
+    'https://greenixback-2.onrender.com'
   ];
 
 console.log('Allowed CORS origins:', ALLOWED_ORIGINS);
